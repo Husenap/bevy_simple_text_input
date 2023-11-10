@@ -197,7 +197,7 @@ fn cursor(
 
         for descendant in children_query.iter_descendants(entity) {
             if let Ok(mut text) = text_query.get_mut(descendant) {
-                if text.sections[1].style.color != Color::NONE {
+                if text_input.inactive || text.sections[1].style.color != Color::NONE {
                     text.sections[1].style.color = Color::NONE;
                 } else {
                     text.sections[1].style.color = text_input.text_style.color;
