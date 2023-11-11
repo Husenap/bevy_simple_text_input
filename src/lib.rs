@@ -65,9 +65,13 @@ fn keyboard(
         for descendant in children_query.iter_descendants(input_entity) {
             if let Ok(mut text) = text_query.get_mut(descendant) {
                 for event in character_events.read() {
-                    // This doesn't work on the web, so it is handled below with the KeyboardInput event.
-                    if ['\u{7f}', '\u{8}'].contains(&event.char) {
-                        continue;
+                    if event.char == '\u{8}' {
+                        text.sections[0].value.pop();
+                    }
+
+                    if event.char == '\u{7f}' {
+                        text.sections[2].value =
+                                text.sections[2].value.chars().skip(1).collect();
                     }
 
                     // This doesn't work on the web, so it is handled below with the KeyboardInput event.
@@ -94,13 +98,6 @@ fn keyboard(
                                 let ahead = text.sections[2].value.remove(0);
                                 text.sections[0].value.push(ahead);
                             }
-                        }
-                        Some(KeyCode::Back) => {
-                            text.sections[0].value.pop();
-                        }
-                        Some(KeyCode::Delete) => {
-                            text.sections[2].value =
-                                text.sections[2].value.chars().skip(1).collect();
                         }
                         Some(KeyCode::Return) => {
                             submit_writer.send(TextInputSubmitEvent {
