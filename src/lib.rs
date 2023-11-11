@@ -71,7 +71,7 @@ fn keyboard(
                         // delete key
                         '\u{7f}' => {
                             text.sections[2].value =
-                                text.sections[2].value.chars().skip(1).collect()
+                                text.sections[2].value.chars().skip(1).collect();
                         }
                         '\r' => (),
                         c => text.sections[0].value.push(c),
