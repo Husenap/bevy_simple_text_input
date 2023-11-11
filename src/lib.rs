@@ -67,15 +67,19 @@ fn keyboard(
                 for event in character_events.read() {
                     match event.char {
                         // backspace key
-                        '\u{8}' => text.sections[0].value.pop(),
+                        '\u{8}' => {
+                            text.sections[0].value.pop();
+                        }
                         // delete key
                         '\u{7f}' => {
                             text.sections[2].value =
                                 text.sections[2].value.chars().skip(1).collect();
                         }
                         '\r' => (),
-                        c => text.sections[0].value.push(c),
-                    }
+                        c => {
+                            text.sections[0].value.push(c);
+                        }
+                    };
                 }
 
                 for event in events.read() {
