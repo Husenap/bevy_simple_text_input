@@ -65,21 +65,17 @@ fn keyboard(
         for descendant in children_query.iter_descendants(input_entity) {
             if let Ok(mut text) = text_query.get_mut(descendant) {
                 for event in character_events.read() {
-                    if event.char == '\u{8}' {
-                        text.sections[0].value.pop();
+                    match event.char {
+                        // backspace key
+                        '\u{8}' => text.sections[0].value.pop(),
+                        // delete key
+                        '\u{7f}' => {
+                            text.sections[2].value =
+                                text.sections[2].value.chars().skip(1).collect()
+                        }
+                        '\r' => (),
+                        c => text.sections[0].value.push(c),
                     }
-
-                    if event.char == '\u{7f}' {
-                        text.sections[2].value =
-                                text.sections[2].value.chars().skip(1).collect();
-                    }
-
-                    // This doesn't work on the web, so it is handled below with the KeyboardInput event.
-                    if event.char == '\r' {
-                        continue;
-                    }
-
-                    text.sections[0].value.push(event.char);
                 }
 
                 for event in events.read() {
